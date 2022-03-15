@@ -3,12 +3,24 @@ import java.io.UnsupportedEncodingException;
 public class Projet {
 
     public static byte xor(byte a,byte b){
-        if(a==b){
+         if(a==b){
             return 0;
         }
         else{
             return 1;
         }
+    }
+
+    public static void xor(byte[] message,byte[] masque){
+
+        int tailleM = message.length;
+
+        System.out.println(tailleM);
+
+        byte[] res = new byte[tailleM];
+
+        
+
     }
 
     public static String afficheEnBinaire(byte[] message){
@@ -83,7 +95,7 @@ public class Projet {
         testMasque = genererMasque();
         System.out.println(afficheEnBinaire(testMasque));
 
-
+        xor(infoBin,testMasque);
 
         //byte res = xor(a,b);
         //byte res2 = xor(a,b);
