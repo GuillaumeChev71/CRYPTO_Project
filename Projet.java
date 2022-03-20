@@ -48,6 +48,8 @@ public class Projet {
         return stringMessage;
     }
 
+
+    //Génération du masque 1)
     public static byte[] genererMasque(byte[] message){
         String messageBinaire = afficheEnBinaire(message);
         int tailleM = messageBinaire.length();
@@ -68,6 +70,67 @@ public class Projet {
         return masque;
     }
 
+    //Génération du masque 2)
+    public static byte[]  genererMasqueV2(byte[] message){
+
+        String messageBinaire = afficheEnBinaire(message);
+        int tailleM = messageBinaire.length();
+
+        byte[] masque = new byte[tailleM];
+        byte[] vn = new byte[tailleM];
+        byte[] xn = new byte[tailleM];
+        byte[] yn = new byte[tailleM];
+        byte[] zn = new byte[tailleM];
+
+        //génération des 25 bits aléatoires de vn
+        for(int i=0;i<25;i++){
+            int b=(int)(Math.random()*2);  //nb aléatoire 0 ou 1
+            vn[i]=(byte) b;
+        }
+
+        //génération des 31 bits aléatoires de xn
+        for(int i=0;i<31;i++){
+            int b=(int)(Math.random()*2);  //nb aléatoire 0 ou 1
+            xn[i]=(byte) b;
+        }
+
+        //génération des 33 bits aléatoires de yn
+        for(int i=0;i<33;i++){
+            int b=(int)(Math.random()*2);  //nb aléatoire 0 ou 1
+            yn[i]=(byte) b;
+        }
+
+        //génération des 39 bits aléatoires de zn
+        for(int i=0;i<39;i++){
+            int b=(int)(Math.random()*2);  //nb aléatoire 0 ou 1
+            zn[i]=(byte) b;
+        }
+
+        //On applique la formule du LFSR de vn
+        for(int y=25;y<tailleM;y++){
+            vn[y] = xor(xor(xor(vn[y-5],vn[y-13]),vn[y-17]),vn[y-25]);
+        }
+
+        //On applique la formule du LFSR de xn
+        for(int y=31;y<tailleM;y++){
+            xn[y] = xor(xor(xor(xn[y-7],xn[y-15]),xn[y-19]),xn[y-31]);
+        }
+
+        //On applique la formule du LFSR de yn
+        for(int y=33;y<tailleM;y++){
+            yn[y] = xor(xor(xor(yn[y-5],yn[y-9]),yn[y-29]),yn[y-33]);
+        }
+
+        //On applique la formule du LFSR de zn
+        for(int y=39;y<tailleM;y++){
+            zn[y] = xor(xor(xor(zn[y-3],zn[y-11]),zn[y-35]),zn[y-39]);
+        }
+
+        //On applique un xor() entre vn,xn,yn,zn pour obtenir le masque final
+        masque = xor(xor(xor(vn,xn),yn),zn);
+
+        return masque;
+    }
 
     
     public static void main (String[] args) throws UnsupportedEncodingException {
@@ -76,10 +139,10 @@ public class Projet {
         String m = "Je m'appelle Guillaume";
         byte[] infoBin = m.getBytes("UTF-8");
 
-        for (byte b : infoBin) {
+        /*for (byte b : infoBin) {
             System.out.println((char) b + "-> "
                     + Integer.toBinaryString(b));
-        }
+        }*/
 
         //on converti en string puis en tableau de byte pour obtenir un message binaire
         String messageString = afficheEnBinaire(infoBin);
@@ -89,18 +152,21 @@ public class Projet {
             message[y] =(byte) Integer.parseInt(String.valueOf(messageString.charAt(y)));
         }
 
-        System.out.println("message : "+afficheEnBinaire(message));
 
         byte[] masque = null;
-        masque = genererMasque(infoBin);
+        masque = genererMasqueV2(infoBin);
 
         System.out.println("message : "+afficheEnBinaire(message));
         System.out.println("masque  : "+afficheEnBinaire(masque));
 
         //message crypté en binaire
-        byte[] messageCrypte = null;
-        messageCrypte = xor(message,masque);
+       byte[] messageCrypte = xor(message,masque);
+
+        //message décrypté
+        byte[] messageDecrypte = xor(messageCrypte,masque);
+
         System.out.println("crypte  : "+afficheEnBinaire(messageCrypte));
+        System.out.println("decrypte: "+afficheEnBinaire(messageDecrypte));
 
     }
 }
