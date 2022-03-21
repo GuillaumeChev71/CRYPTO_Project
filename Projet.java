@@ -137,7 +137,7 @@ public class Projet {
         
         
         String m = "Je m'appelle Guillaume";
-        byte[] infoBin = m.getBytes("UTF-8");
+        byte[] infoBin = m.getBytes("ISO_8859_1");
 
         int tailleTableauBits = infoBin.length;
         int[] tailleBits = new int[tailleTableauBits];
@@ -172,25 +172,39 @@ public class Projet {
         System.out.println("masque  : "+afficheEnBinaire(masque));
 
         //message crypté en binaire
-       byte[] messageCrypte = xor(message,masque);
+        byte[] messageCrypte = xor(message,masque);
 
         //message décrypté
         byte[] messageDecrypte = xor(messageCrypte,masque);
 
 
+        //On décompose le message décrypté en fonction de la taille sur laquelle est codée chacun des caractères du message
         String[] messageDecrypteDecompose = new String[tailleTableauBits];
 
+        int x = 0;
         for(int i=0;i<tailleTableauBits;i++){
-
+            messageDecrypteDecompose[i]="";
             for(int y=0;y<tailleBits[i];y++){
-
-               messageDecrypteDecompose[i]+=messageDecrypte[]
+                messageDecrypteDecompose[i]+=messageDecrypte[x];
+                x+=1;
             }
         }
+
+        //On met dans un tableau de byte toutes les string (caactère binaire) en byte
+
+        byte[] messageFinal = new byte[tailleTableauBits];
+        for(int i=0;i<tailleTableauBits;i++){
+            
+            //problème, marche pas avec les accents
+            messageFinal[i]=Byte.parseByte(messageDecrypteDecompose[i], 2); //that doesn't work for values greater than 01111111 == 127 as Byte has a range from -128 to 127
+        }
+
 
 
         System.out.println("crypte  : "+afficheEnBinaire(messageCrypte));
         System.out.println("decrypte: "+afficheEnBinaire(messageDecrypte));
+
+        System.out.println(new String(messageFinal, "ISO_8859_1"));
 
     }
 }
