@@ -134,15 +134,27 @@ public class Projet {
 
     
     public static void main (String[] args) throws UnsupportedEncodingException {
-        //affichage binaire de chacun des caractères du message
+        
         
         String m = "Je m'appelle Guillaume";
         byte[] infoBin = m.getBytes("UTF-8");
 
-        /*for (byte b : infoBin) {
-            System.out.println((char) b + "-> "
-                    + Integer.toBinaryString(b));
-        }*/
+        int tailleTableauBits = infoBin.length;
+        int[] tailleBits = new int[tailleTableauBits];
+        System.out.println(tailleTableauBits);
+
+        //affichage binaire de chacun des caractères du message
+        for (byte b : infoBin) {
+            //System.out.println((char) b + "-> " + Integer.toBinaryString(b));
+            //System.out.println(Integer.toBinaryString(b).length());
+        }
+
+        // On récupère la taille de chaque bits en binaire pour pouvoir décomposer le message décrypté
+        for(int i=0;i<tailleTableauBits;i++){
+            tailleBits[i]=Integer.toBinaryString(infoBin[i]).length();
+        }
+
+
 
         //on converti en string puis en tableau de byte pour obtenir un message binaire
         String messageString = afficheEnBinaire(infoBin);
@@ -164,6 +176,18 @@ public class Projet {
 
         //message décrypté
         byte[] messageDecrypte = xor(messageCrypte,masque);
+
+
+        String[] messageDecrypteDecompose = new String[tailleTableauBits];
+
+        for(int i=0;i<tailleTableauBits;i++){
+
+            for(int y=0;y<tailleBits[i];y++){
+
+               messageDecrypteDecompose[i]+=messageDecrypte[]
+            }
+        }
+
 
         System.out.println("crypte  : "+afficheEnBinaire(messageCrypte));
         System.out.println("decrypte: "+afficheEnBinaire(messageDecrypte));
