@@ -297,6 +297,9 @@ public class Projet {
             }
         }
 
+
+
+        //essayer de changer de type pour le tableau final byte en int ...
         byte[] fichierFinal = new byte[tailleTableauBits];
         for(int i=0;i<tailleTableauBits;i++){
             
