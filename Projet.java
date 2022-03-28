@@ -1,5 +1,8 @@
 import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
+import java.nio.file.Files;
+
 
 public class Projet {
 
@@ -132,10 +135,37 @@ public class Projet {
         return masque;
     }
 
-    
-    public static void main (String[] args) throws UnsupportedEncodingException {
-        
-        
+    public static byte[] getFileBytes(File file) throws IOException {
+    ByteArrayOutputStream ous = null;
+    InputStream ios = null;
+    try {
+        byte[] buffer = new byte[4096];
+        ous = new ByteArrayOutputStream();
+        ios = new FileInputStream(file);
+        int read = 0;
+        while ((read = ios.read(buffer)) != -1)
+            ous.write(buffer, 0, read);
+    } finally {
+        try {
+            if (ous != null)
+                ous.close();
+        } catch (IOException e) {
+            // swallow, since not that important
+        }
+        try {
+            if (ios != null)
+                ios.close();
+        } catch (IOException e) {
+            // swallow, since not that important
+        }
+    }
+    return ous.toByteArray();
+}
+
+
+
+    public static void CryptoString()throws UnsupportedEncodingException{
+
         String m = "Je m'appelle Guillaume";
         byte[] infoBin = m.getBytes("ISO_8859_1");
 
@@ -144,10 +174,10 @@ public class Projet {
         System.out.println(tailleTableauBits);
 
         //affichage binaire de chacun des caractères du message
-        for (byte b : infoBin) {
+        //for (byte b : infoBin) {
             //System.out.println((char) b + "-> " + Integer.toBinaryString(b));
             //System.out.println(Integer.toBinaryString(b).length());
-        }
+        //}
 
         // On récupère la taille de chaque bits en binaire pour pouvoir décomposer le message décrypté
         for(int i=0;i<tailleTableauBits;i++){
@@ -200,11 +230,40 @@ public class Projet {
         }
 
 
-
         System.out.println("crypte  : "+afficheEnBinaire(messageCrypte));
         System.out.println("decrypte: "+afficheEnBinaire(messageDecrypte));
 
         System.out.println(new String(messageFinal, "ISO_8859_1"));
+
+    }
+
+    
+
+    public static void CryptoFichier()throws UnsupportedEncodingException,IOException {
+
+        File fichier = new File("test.txt");
+        byte[] fichierBin = getFileBytes(fichier);
+
+        int tailleTableauBits = fichierBin.length;
+
+        System.out.println(afficheEnBinaire(fichierBin));
+
+        /*for (byte b : fichierBin) {
+            System.out.println( Integer.toBinaryString(b));
+            System.out.println(Integer.toBinaryString(b).length());
+        }*/
+
+        
+
+
+
+    }
+
+    
+    public static void main (String[] args) throws UnsupportedEncodingException,IOException {
+        
+        //CryptoString();
+        CryptoFichier();
 
     }
 }
