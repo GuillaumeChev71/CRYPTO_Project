@@ -241,7 +241,7 @@ public class Projet {
 
     public static void CryptoFichier()throws UnsupportedEncodingException,IOException {
 
-        File fichier = new File("image.jpg");
+        File fichier = new File("fichier.txt");
         byte[] fichierBin = getFileBytes(fichier);
 
         int tailleTableauBits = fichierBin.length;
@@ -277,7 +277,7 @@ public class Projet {
         byte[] fichierCrypte = xor(message,masque);
 
         //Test pour générer un fichier crypté
-        Path pathh = Paths.get("imageCrypte.jpg");
+        Path pathh = Paths.get("fichierCrypte.txt");
         Files.write(pathh, fichierCrypte);
 
 
@@ -303,6 +303,7 @@ public class Projet {
         byte[] fichierFinal = new byte[tailleTableauBits];
         for(int i=0;i<tailleTableauBits;i++){
             
+            
             //ne marche pas avec des accents car codés sur de plus grand nombre ...
             fichierFinal[i]=Byte.parseByte(fichierDecrypteDecompose[i], 2); //that doesn't work for values greater than 01111111 == 127 as Byte has a range from -128 to 127
         }
@@ -311,7 +312,7 @@ public class Projet {
         System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
 
         //On recréé le fichier à partir du tableau de byte
-        Path path = Paths.get("imageDecrypte.jpg");
+        Path path = Paths.get("fichierDecrypte.txt");
         Files.write(path, fichierFinal);
 
     }
