@@ -138,7 +138,7 @@ public class Projet {
         ByteArrayOutputStream ous = null;
         InputStream ios = null;
         try {
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[10000000];
             ous = new ByteArrayOutputStream();
             ios = new FileInputStream(file);
             int read = 0;
@@ -230,39 +230,56 @@ public class Projet {
 
     public static void CryptoFichierTexte()throws UnsupportedEncodingException,IOException {
 
-        File fichier = new File("image.txt");
+        System.out.println("C'est ici 1");
+
+        File fichier = new File("test.wav");
         byte[] fichierBin = getFileBytes(fichier);
         int tailleTableauBits = fichierBin.length;
         int[] tailleBits = new int[tailleTableauBits];
+
+        System.out.println("C'est ici 2");
 
         // On récupère la taille de chaque bits en binaire pour pouvoir décomposer le message décrypté
         for(int i=0;i<tailleTableauBits;i++){
             tailleBits[i]=Integer.toBinaryString(fichierBin[i]).length();
         }
 
+        System.out.println("C'est ici 3");
+
         //on converti en string puis en tableau de byte pour obtenir un message binaire
         String fichierBinString = afficheEnBinaire(fichierBin);
+
+        System.out.println("C'est ici 4");
+
         byte[] message = new byte[fichierBinString.length()];
 
         for(int y=0; y < fichierBinString.length(); y++){
             message[y] =(byte) Integer.parseInt(String.valueOf(fichierBinString.charAt(y)));
         }
 
+        System.out.println("C'est ici 5");
+
         byte[] masque = null;
         masque = genererMasqueV2(fichierBin);
 
-        System.out.println("fichier : "+afficheEnBinaire(message));
-        System.out.println("masque  : "+afficheEnBinaire(masque));
+        System.out.println("C'est ici 6");
+
+        //System.out.println("fichier : "+afficheEnBinaire(message));
+        //System.out.println("masque  : "+afficheEnBinaire(masque));
 
         //fichier crypté en binaire
         byte[] fichierCrypte = xor(message,masque);
 
+        System.out.println("C'est ici 7");
+
         //Test pour générer un fichier crypté
-        Path pathh = Paths.get("fichierCrypte.txt");
+        Path pathh = Paths.get("audioCrypte.wav");
         Files.write(pathh, fichierCrypte);
 
         //fichier décrypté
         byte[] fichierDecrypte = xor(fichierCrypte,masque);
+
+        System.out.println("C'est ici 8");
 
         //On décompose le fichier décrypté en fonction de la taille sur laquelle est codée chacune des données du fichier
         String[] fichierDecrypteDecompose = new String[tailleTableauBits];
@@ -276,12 +293,16 @@ public class Projet {
             }
         }
 
+        System.out.println("C'est ici 9");
+
         //On converti les string en byte
         int[] fichierFinal = new int[tailleTableauBits];
 
         for(int i=0;i<tailleTableauBits;i++){
             fichierFinal[i]=binaryToInteger(fichierDecrypteDecompose[i]);
         }
+
+        System.out.println("C'est ici 10");
         
         byte[] fichierFinalByte = new byte[tailleTableauBits];
 
@@ -290,90 +311,31 @@ public class Projet {
             fichierFinalByte[i]=(byte)fichierFinal[i];
         }
 
-        System.out.println("crypte  : "+afficheEnBinaire(fichierCrypte));
-        System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
+        System.out.println("C'est ici 11");
+
+        //System.out.println("crypte  : "+afficheEnBinaire(fichierCrypte));
+        //System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
 
         //On recréé le fichier à partir du tableau de byte
-        Path path = Paths.get("fichierDecrypte.txt");
+        Path path = Paths.get("audioDecrypte.wav");
         Files.write(path, fichierFinalByte);
+
+        
     }
 
     public static void CryptoFichierImage()throws UnsupportedEncodingException,IOException {
 
-        File fichier = new File("image.txt");
+        File fichier = new File("test.png");
         byte[] fichierBin = getFileBytes(fichier);
-        int tailleTableauBits = fichierBin.length;
-        int[] tailleBits = new int[tailleTableauBits];
 
-        // On récupère la taille de chaque bits en binaire pour pouvoir décomposer le message décrypté
-        for(int i=0;i<tailleTableauBits;i++){
-            tailleBits[i]=Integer.toBinaryString(fichierBin[i]).length();
-        }
-
-        //on converti en string puis en tableau de byte pour obtenir un message binaire
-        String fichierBinString = afficheEnBinaire(fichierBin);
-        byte[] message = new byte[fichierBinString.length()];
-
-        for(int y=0; y < fichierBinString.length(); y++){
-            message[y] =(byte) Integer.parseInt(String.valueOf(fichierBinString.charAt(y)));
-        }
-
-        byte[] masque = null;
-        masque = genererMasqueV2(fichierBin);
-
-        System.out.println("fichier : "+afficheEnBinaire(message));
-        System.out.println("masque  : "+afficheEnBinaire(masque));
-
-        //fichier crypté en binaire
-        byte[] fichierCrypte = xor(message,masque);
-
-        //Test pour générer un fichier crypté
-        Path pathh = Paths.get("fichierCrypte.txt");
-        Files.write(pathh, fichierCrypte);
-
-        //fichier décrypté
-        byte[] fichierDecrypte = xor(fichierCrypte,masque);
-
-        //On décompose le fichier décrypté en fonction de la taille sur laquelle est codée chacune des données du fichier
-        String[] fichierDecrypteDecompose = new String[tailleTableauBits];
-
-        int x = 0;
-        for(int i=0;i<tailleTableauBits;i++){
-            fichierDecrypteDecompose[i]="";
-            for(int y=0;y<tailleBits[i];y++){
-                fichierDecrypteDecompose[i]+=fichierDecrypte[x];
-                x+=1;
-            }
-        }
-
-        //On converti les string en byte
-        int[] fichierFinal = new int[tailleTableauBits];
-
-        for(int i=0;i<tailleTableauBits;i++){
-            fichierFinal[i]=binaryToInteger(fichierDecrypteDecompose[i]);
-        }
-        
-        byte[] fichierFinalByte = new byte[tailleTableauBits];
-
-        //On recaste en byte le tableau de int
-        for(int i=0;i<tailleTableauBits;i++){
-            fichierFinalByte[i]=(byte)fichierFinal[i];
-        }
-
-        System.out.println("crypte  : "+afficheEnBinaire(fichierCrypte));
-        System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
-
-        //On recréé le fichier à partir du tableau de byte
-        Path path = Paths.get("fichierDecrypte.txt");
-        Files.write(path, fichierFinalByte);
     }
 
     
     public static void main (String[] args) throws UnsupportedEncodingException,IOException{
         
         //CryptoString();
-        //CryptoFichierTexte();
-        CryptoFichierImage();
+        CryptoFichierTexte();   //marche pour fichier .txt et image en .bmp
+        //CryptoFichierImage();
 
     }
 }
