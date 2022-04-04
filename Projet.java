@@ -7,13 +7,20 @@ import java.nio.file.*;
 public class Projet {
 
     public static byte xor(byte a,byte b){
-         if(a==b){
+        
+        if(a==b){
             return 0;
         }
         else{
             return 1;
         }
     }
+
+    public static byte xorTest(byte a ,byte b){
+
+        
+    }
+
 
     public static byte[] xor(byte[] message,byte[] masque){
 
@@ -334,8 +341,29 @@ public class Projet {
     public static void main (String[] args) throws UnsupportedEncodingException,IOException{
         
         //CryptoString();
-        CryptoFichierTexte();   //marche pour fichier .txt et image en .bmp
+        //CryptoFichierTexte();   //marche pour fichier .txt et image en .bmp
         //CryptoFichierImage();
+
+        File file = new File("image.gif");
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+            
+        for (byte b : fileContent) {
+            System.out.println(Integer.toBinaryString(b));
+            System.out.println(Integer.toBinaryString(b).length());
+        }
+
+        byte[] fileTest = new byte[fileContent.length];
+
+        for(int i=0;i<fileContent.length;i++){
+            
+            fileTest[i]=fileContent[i];
+
+        }
+
+        
+        Path path = Paths.get("imageFinal.gif");
+        Files.write(path, fileTest);
+
 
     }
 }
