@@ -16,10 +16,12 @@ public class Projet {
         }
     }
 
-    public static byte xorTest(byte a ,byte b){
+   /* public static byte xorTest(byte a ,byte b){
+
+
 
         
-    }
+    }*/
 
 
     public static byte[] xor(byte[] message,byte[] masque){
@@ -235,28 +237,27 @@ public class Projet {
         System.out.println(new String(messageFinal, "ISO_8859_1"));
     }
 
-    public static void CryptoFichierTexte()throws UnsupportedEncodingException,IOException {
+    public static void CryptoFichier()throws UnsupportedEncodingException,IOException {
 
-        System.out.println("C'est ici 1");
+        
 
-        File fichier = new File("test.wav");
-        byte[] fichierBin = getFileBytes(fichier);
+        File fichier = new File("fichier.txt");
+        byte[] fichierBin = Files.readAllBytes(fichier.toPath());
         int tailleTableauBits = fichierBin.length;
         int[] tailleBits = new int[tailleTableauBits];
 
-        System.out.println("C'est ici 2");
-
+        
         // On récupère la taille de chaque bits en binaire pour pouvoir décomposer le message décrypté
         for(int i=0;i<tailleTableauBits;i++){
             tailleBits[i]=Integer.toBinaryString(fichierBin[i]).length();
         }
 
-        System.out.println("C'est ici 3");
+       
 
         //on converti en string puis en tableau de byte pour obtenir un message binaire
         String fichierBinString = afficheEnBinaire(fichierBin);
 
-        System.out.println("C'est ici 4");
+        
 
         byte[] message = new byte[fichierBinString.length()];
 
@@ -264,29 +265,27 @@ public class Projet {
             message[y] =(byte) Integer.parseInt(String.valueOf(fichierBinString.charAt(y)));
         }
 
-        System.out.println("C'est ici 5");
+       
 
         byte[] masque = null;
         masque = genererMasqueV2(fichierBin);
 
-        System.out.println("C'est ici 6");
 
-        //System.out.println("fichier : "+afficheEnBinaire(message));
-        //System.out.println("masque  : "+afficheEnBinaire(masque));
+        System.out.println("fichier : "+afficheEnBinaire(message));
+        System.out.println("masque  : "+afficheEnBinaire(masque));
 
         //fichier crypté en binaire
         byte[] fichierCrypte = xor(message,masque);
 
-        System.out.println("C'est ici 7");
+       
 
         //Test pour générer un fichier crypté
-        Path pathh = Paths.get("audioCrypte.wav");
+        Path pathh = Paths.get("testCrypte.txt");
         Files.write(pathh, fichierCrypte);
 
         //fichier décrypté
         byte[] fichierDecrypte = xor(fichierCrypte,masque);
 
-        System.out.println("C'est ici 8");
 
         //On décompose le fichier décrypté en fonction de la taille sur laquelle est codée chacune des données du fichier
         String[] fichierDecrypteDecompose = new String[tailleTableauBits];
@@ -300,7 +299,7 @@ public class Projet {
             }
         }
 
-        System.out.println("C'est ici 9");
+
 
         //On converti les string en byte
         int[] fichierFinal = new int[tailleTableauBits];
@@ -309,8 +308,6 @@ public class Projet {
             fichierFinal[i]=binaryToInteger(fichierDecrypteDecompose[i]);
         }
 
-        System.out.println("C'est ici 10");
-        
         byte[] fichierFinalByte = new byte[tailleTableauBits];
 
         //On recaste en byte le tableau de int
@@ -318,33 +315,27 @@ public class Projet {
             fichierFinalByte[i]=(byte)fichierFinal[i];
         }
 
-        System.out.println("C'est ici 11");
+    
 
-        //System.out.println("crypte  : "+afficheEnBinaire(fichierCrypte));
-        //System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
+        System.out.println("crypte  : "+afficheEnBinaire(fichierCrypte));
+        System.out.println("decrypte: "+afficheEnBinaire(fichierDecrypte));
 
         //On recréé le fichier à partir du tableau de byte
-        Path path = Paths.get("audioDecrypte.wav");
+        Path path = Paths.get("testDecrypte.txt");
         Files.write(path, fichierFinalByte);
 
         
     }
 
-    public static void CryptoFichierImage()throws UnsupportedEncodingException,IOException {
-
-        File fichier = new File("test.png");
-        byte[] fichierBin = getFileBytes(fichier);
-
-    }
 
     
     public static void main (String[] args) throws UnsupportedEncodingException,IOException{
         
         //CryptoString();
-        //CryptoFichierTexte();   //marche pour fichier .txt et image en .bmp
-        //CryptoFichierImage();
+        CryptoFichier();   //marche pour fichier .txt et image en .bmp
+        
 
-        File file = new File("image.gif");
+        File file = new File("fichier.txt");
         byte[] fileContent = Files.readAllBytes(file.toPath());
             
         for (byte b : fileContent) {
@@ -352,17 +343,11 @@ public class Projet {
             System.out.println(Integer.toBinaryString(b).length());
         }
 
-        byte[] fileTest = new byte[fileContent.length];
-
-        for(int i=0;i<fileContent.length;i++){
-            
-            fileTest[i]=fileContent[i];
-
-        }
+        
 
         
-        Path path = Paths.get("imageFinal.gif");
-        Files.write(path, fileTest);
+        //Path path = Paths.get("imageFinal.gif");
+        //Files.write(path, fileTest);
 
 
     }
